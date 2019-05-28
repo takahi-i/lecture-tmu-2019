@@ -1,7 +1,15 @@
+import glob
+import sys
 import os
+import collections
 
-print(os.listdir(os.path.normpath("./")))
-print(os.listdir(os.path.normpath("dataset/")))
+import numpy as np
+from sklearn.feature_extraction import DictVectorizer
+from sklearn import svm, naive_bayes
+from sklearn.ensemble import RandomForestClassifier
+from sklearn import grid_search
+import matplotlib  # not used in this notebook
+import pandas as pd  # not used in this notebook
 
 
 def set_locale():
@@ -11,18 +19,6 @@ def set_locale():
         os.environ.setdefault('LC_ALL', 'ja_JP.UTF-8')
         print("Your locale is set as ja_JP.UTF-8")
 
-
-set_locale()
-
-import glob
-
-neg_files = glob.glob(os.path.normpath("dataset/tokens/neg/*"))
-pos_files = glob.glob(os.path.normpath("dataset/tokens/pos/*"))
-
-print(neg_files[0:2])
-print(pos_files[0:2])
-
-import sys
 
 def text_reader(file_path):
     python_version = sys.version_info.major
@@ -37,23 +33,11 @@ def text_reader(file_path):
                 print(line)
 
 
-import matplotlib # not used in this notebook
-import pandas as pd # not used in this notebook
-
-import collections
-import numpy as np
-
-from sklearn.feature_extraction import DictVectorizer
-
-from sklearn import svm, naive_bayes
-from sklearn.ensemble import RandomForestClassifier
-
-from sklearn import grid_search
-
 def word_counter(string):
     words = string.strip().split()
     count_dict = collections.Counter(words)
     return dict(count_dict)
+
 
 def get_unigram(file_path):
     result = []
@@ -74,5 +58,16 @@ def get_unigram(file_path):
 
     return result
 
-print(word_counter("I am YK. I love data analysis using python."))
 
+print(os.listdir(os.path.normpath("./")))
+print(os.listdir(os.path.normpath("dataset/")))
+
+set_locale()
+
+neg_files = glob.glob(os.path.normpath("dataset/tokens/neg/*"))
+pos_files = glob.glob(os.path.normpath("dataset/tokens/pos/*"))
+
+print(neg_files[0:2])
+print(pos_files[0:2])
+
+print(word_counter("I am YK. I love data analysis using python."))
