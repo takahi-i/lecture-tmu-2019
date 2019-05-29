@@ -1,4 +1,14 @@
 import os
+import glob
+import sys
+import collections
+
+import numpy as np
+from sklearn import svm, naive_bayes
+from sklearn import grid_search
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_extraction import DictVectorizer
+
 
 print( os.listdir(os.path.normpath("dataset/")) )
 
@@ -11,7 +21,7 @@ def set_locale():
 
 set_locale()
 
-import glob
+
 
 neg_files = glob.glob( os.path.normpath("dataset/tokens/neg/*"))
 pos_files = glob.glob( os.path.normpath("dataset/tokens/pos/*"))
@@ -19,7 +29,7 @@ pos_files = glob.glob( os.path.normpath("dataset/tokens/pos/*"))
 print(neg_files[0:2])
 print(pos_files[0:2])
 
-import sys
+
 
 def text_reader(file_path):
     python_version = sys.version_info.major
@@ -36,18 +46,7 @@ def text_reader(file_path):
 
 text_reader(neg_files[11])
 
-import matplotlib # not used in this notebook
-import pandas as pd # not used in this notebook
 
-import collections
-import numpy as np
-
-from sklearn.feature_extraction import DictVectorizer
-
-from sklearn import svm, naive_bayes
-from sklearn.ensemble import RandomForestClassifier
-
-from sklearn import grid_search
 
 def word_counter(string):
     words = string.strip().split()
