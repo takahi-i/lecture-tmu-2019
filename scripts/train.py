@@ -10,26 +10,12 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction import DictVectorizer
 
 
-print( os.listdir(os.path.normpath("dataset/")) )
-
 def set_locale():
     default = os.environ.get('LC_ALL')
     print( "Your default locale is", default )
     if default is None:
         os.environ.setdefault('LC_ALL', 'ja_JP.UTF-8')
         print( "Your locale is set as ja_JP.UTF-8" )
-
-set_locale()
-
-
-
-neg_files = glob.glob( os.path.normpath("dataset/tokens/neg/*"))
-pos_files = glob.glob( os.path.normpath("dataset/tokens/pos/*"))
-
-print(neg_files[0:2])
-print(pos_files[0:2])
-
-
 
 def text_reader(file_path):
     python_version = sys.version_info.major
@@ -42,11 +28,6 @@ def text_reader(file_path):
         with open(file_path, 'r') as f:
             for line in f:
                 print(line)
-
-
-text_reader(neg_files[11])
-
-
 
 def word_counter(string):
     words = string.strip().split()
@@ -72,44 +53,6 @@ def get_unigram(file_path):
 
     return result
 
-
-word_counter("I am YK. I love data analysis using python.")
-
-DATA_NUM = 700
-
-unigrams_data = get_unigram(neg_files[:DATA_NUM]) + get_unigram(pos_files[:DATA_NUM])
-
-print( unigrams_data[0] )
-print( "data size :", sys.getsizeof(unigrams_data) / 1000000, "[MB]" )
-
-vec = DictVectorizer()
-feature_vectors_csr = vec.fit_transform( unigrams_data )
-
-feature_vectors_csr
-
-feature_vectors = vec.fit_transform( unigrams_data ).toarray()
-print( "data dimension :", feature_vectors.shape )
-print( feature_vectors[0] )
-print( "data size :", sys.getsizeof(feature_vectors) / 1000000, "[MB]" )
-
-labels = np.r_[np.tile(0, DATA_NUM), np.tile(1, DATA_NUM)]
-
-print( labels[0], labels[DATA_NUM-1], labels[DATA_NUM], labels[2*DATA_NUM-1]  )
-
-np.random.seed(7789)
-
-shuffle_order = np.random.choice( 2*DATA_NUM, 2*DATA_NUM, replace=False )
-
-print( "length :", len(shuffle_order) )
-print( "first 10 elements :", shuffle_order[0:10] )
-
-one_third_size = int( 2*DATA_NUM / 3. )
-print( "one third of the length :", one_third_size )
-
-print( "# of '1' in 1st set :", np.sum( labels[ shuffle_order[:one_third_size] ]  ) )
-print( "# of '1' in 2nd set :", np.sum( labels[ shuffle_order[one_third_size:2*one_third_size] ]  ) )
-print( "# of '1' in 3rd set :", np.sum( labels[ shuffle_order[2*one_third_size:] ]  ) )
-
 def N_splitter(seq, N):
     avg = len(seq) / float(N)
     out = []
@@ -120,9 +63,6 @@ def N_splitter(seq, N):
         last += avg
 
     return np.array(out)
-
-N_splitter(range(14), 3)
-
 
 def train_model(features, labels, method='SVM', parameters=None):
     ### set the model
@@ -177,6 +117,57 @@ def cross_validate(n_folds, feature_vectors, labels, shuffle_order, method='SVM'
         result_correct_num.append( correct_num )
 
     return result_test_num, result_correct_num
+
+
+print( os.listdir(os.path.normpath("dataset/")) )
+
+
+set_locale()
+
+neg_files = glob.glob( os.path.normpath("dataset/tokens/neg/*"))
+pos_files = glob.glob( os.path.normpath("dataset/tokens/pos/*"))
+
+print(neg_files[0:2])
+print(pos_files[0:2])
+
+text_reader(neg_files[11])
+
+word_counter("I am YK. I love data analysis using python.")
+
+DATA_NUM = 700
+
+unigrams_data = get_unigram(neg_files[:DATA_NUM]) + get_unigram(pos_files[:DATA_NUM])
+
+print( unigrams_data[0] )
+print( "data size :", sys.getsizeof(unigrams_data) / 1000000, "[MB]" )
+
+vec = DictVectorizer()
+feature_vectors_csr = vec.fit_transform( unigrams_data )
+
+feature_vectors_csr
+
+feature_vectors = vec.fit_transform( unigrams_data ).toarray()
+print( "data dimension :", feature_vectors.shape )
+print( feature_vectors[0] )
+print( "data size :", sys.getsizeof(feature_vectors) / 1000000, "[MB]" )
+
+labels = np.r_[np.tile(0, DATA_NUM), np.tile(1, DATA_NUM)]
+
+print( labels[0], labels[DATA_NUM-1], labels[DATA_NUM], labels[2*DATA_NUM-1]  )
+
+np.random.seed(7789)
+
+shuffle_order = np.random.choice( 2*DATA_NUM, 2*DATA_NUM, replace=False )
+
+print( "length :", len(shuffle_order) )
+print( "first 10 elements :", shuffle_order[0:10] )
+
+one_third_size = int( 2*DATA_NUM / 3. )
+print( "one third of the length :", one_third_size )
+
+print( "# of '1' in 1st set :", np.sum( labels[ shuffle_order[:one_third_size] ]  ) )
+print( "# of '1' in 2nd set :", np.sum( labels[ shuffle_order[one_third_size:2*one_third_size] ]  ) )
+print( "# of '1' in 3rd set :", np.sum( labels[ shuffle_order[2*one_third_size:] ]  ) )
 
 N_FOLDS = 3
 
