@@ -111,3 +111,88 @@ print( "# of '1' in 1st set :", np.sum( labels[ shuffle_order[:one_third_size] ]
 print( "# of '1' in 2nd set :", np.sum( labels[ shuffle_order[one_third_size:2*one_third_size] ]  ) )
 print( "# of '1' in 3rd set :", np.sum( labels[ shuffle_order[2*one_third_size:] ]  ) )
 
+def N_splitter(seq, N):
+    avg = len(seq) / float(N)
+    out = []
+    last = 0.0
+
+    while last < len(seq):
+        out.append( seq[int(last):int(last + avg)] )
+        last += avg
+
+    return np.array(out)
+
+N_splitter(range(14), 3)
+
+
+def train_model(features, labels, method='SVM', parameters=None):
+    ### set the model
+    if method == 'SVM':
+        model = svm.SVC()
+    elif method == 'NB':
+        model = naive_bayes.GaussianNB()
+    elif method == 'RF':
+        model = RandomForestClassifier()
+    else:
+        print("Set method as SVM (for Support vector machine), NB (for Naive Bayes) or RF (Random Forest)")
+    ### set parameters if exists
+    if parameters:
+        model.set_params(**parameters)
+    ### train the model
+    model.fit( features, labels )
+    ### return the trained model
+    return model
+
+def predict(model, features):
+    predictions = model.predict( features )
+    return predictions
+
+def evaluate_model(predictions, labels):
+    data_num = len(labels)
+    correct_num = np.sum( predictions == labels )
+    return data_num, correct_num
+
+def cross_validate(n_folds, feature_vectors, labels, shuffle_order, method='SVM', parameters=None):
+    result_test_num = []
+    result_correct_num = []
+
+    n_splits = N_splitter( range(2*DATA_NUM), n_folds )
+
+    for i in range(n_folds):
+        print( "Executing {0}th set...".format(i+1) )
+
+        test_elems = shuffle_order[ n_splits[i] ]
+        train_elems = np.array([])
+        train_set = n_splits[ np.arange(n_folds) !=i ]
+        for j in train_set:
+            train_elems = np.r_[ train_elems, shuffle_order[j] ]
+        train_elems = train_elems.astype(np.integer)
+
+        # train
+        model = train_model( feature_vectors[train_elems], labels[train_elems], method, parameters )
+        # predict
+        predictions = predict( model, feature_vectors[test_elems] )
+        # evaluate
+        test_num, correct_num = evaluate_model( predictions, labels[test_elems] )
+        result_test_num.append( test_num )
+        result_correct_num.append( correct_num )
+
+    return result_test_num, result_correct_num
+
+N_FOLDS = 3
+
+ans,corr = cross_validate(N_FOLDS, feature_vectors_csr, labels, shuffle_order, method='SVM', parameters=None)
+
+print( "average precision : ", np.around( 100.*sum(corr)/sum(ans), decimals=1 ), "%" )
+
+search_parameters = [
+    {'kernel': ['rbf'], 'gamma': [1e-2, 1e-3, 1e-4], 'C': [0.1, 1, 10, 100, 1000]},
+    {'kernel': ['linear'], 'C': [0.1, 1, 10, 100, 1000]}
+]
+
+model = svm.SVC()
+clf = grid_search.GridSearchCV(model, search_parameters)
+clf.fit( feature_vectors_csr, labels )
+
+print("best paremters : ", clf.best_params_)
+print("best scores : ", clf.best_score_)
