@@ -1,6 +1,6 @@
 import os
 
-print( os.listdir(os.path.normpath("../dataset/")) )
+print( os.listdir(os.path.normpath("dataset/")) )
 
 def set_locale():
     default = os.environ.get('LC_ALL')
@@ -13,8 +13,8 @@ set_locale()
 
 import glob
 
-neg_files = glob.glob( os.path.normpath("../dataset/tokens/neg/*"))
-pos_files = glob.glob( os.path.normpath("../dataset/tokens/pos/*"))
+neg_files = glob.glob( os.path.normpath("dataset/tokens/neg/*"))
+pos_files = glob.glob( os.path.normpath("dataset/tokens/pos/*"))
 
 print(neg_files[0:2])
 print(pos_files[0:2])
