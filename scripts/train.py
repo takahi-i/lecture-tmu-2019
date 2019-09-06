@@ -38,26 +38,6 @@ feature_vectors_csr = generate_feature_vectors()
 labels = np.r_[np.tile(0, DATA_NUM), np.tile(1, DATA_NUM)]
 print(labels[0], labels[DATA_NUM-1], labels[DATA_NUM], labels[2*DATA_NUM-1])
 
-np.random.seed(7789)
-
-shuffle_order = np.random.choice(2*DATA_NUM, 2*DATA_NUM, replace=False)
-
-print("length :", len(shuffle_order))
-print("first 10 elements :", shuffle_order[0:10])
-
-one_third_size = int(2*DATA_NUM / 3.)
-print("one third of the length :", one_third_size)
-
-print("# of '1' in 1st set :", np.sum(labels[shuffle_order[:one_third_size]]))
-print("# of '1' in 2nd set :", np.sum(labels[shuffle_order[one_third_size:2*one_third_size]]))
-print("# of '1' in 3rd set :", np.sum(labels[shuffle_order[2*one_third_size:]]))
-
-N_FOLDS = 3
-
-ans, corr = cross_validate(N_FOLDS, feature_vectors_csr, labels, shuffle_order, method='SVM', parameters=None)
-
-print("average precision : ", np.around(100.*sum(corr)/sum(ans), decimals=1), "%")
-
 search_parameters = [
     {'kernel': ['rbf'], 'gamma': [1e-2, 1e-3, 1e-4], 'C': [0.1, 1, 10, 100, 1000]},
     {'kernel': ['linear'], 'C': [0.1, 1, 10, 100, 1000]}
