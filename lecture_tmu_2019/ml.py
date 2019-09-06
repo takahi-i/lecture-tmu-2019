@@ -11,7 +11,7 @@ from lecture_tmu_2019.utils import text_reader, word_counter, get_unigram, DATA_
 
 class ReputationClassifier:
     def __init__(self):
-        pass
+        self.feature_vectors = self.generate_feature_vectors(self.load_data())
 
     def load_data(self):
         print(os.listdir(os.path.normpath("dataset/")))
@@ -23,15 +23,11 @@ class ReputationClassifier:
         print("data size :", sys.getsizeof(unigrams) / 1000000, "[MB]")
         return unigrams
 
-    def generate_feature_vectors(self, unigrams_data):
+    def generate_feature_vectors(self, unigrams):
         vec = DictVectorizer()
-        feature_vectors_csr = vec.fit_transform(unigrams_data)
-        feature_vectors = vec.fit_transform(unigrams_data).toarray()
-        print("data dimension :", feature_vectors.shape)
-        print("data size :", sys.getsizeof(feature_vectors) / 1000000, "[MB]")
-        return feature_vectors_csr
+        return vec.fit_transform(unigrams)
 
-    def fit(self, feature_vectors_csr):
+    def fit(self):
         labels = np.r_[np.tile(0, DATA_NUM), np.tile(1, DATA_NUM)]
         search_parameters = [
             {'kernel': ['rbf'], 'gamma': [1e-2, 1e-3, 1e-4], 'C': [0.1, 1, 10, 100, 1000]},
@@ -39,6 +35,6 @@ class ReputationClassifier:
         ]
         model = svm.SVC()
         clf = grid_search.GridSearchCV(model, search_parameters)
-        clf.fit(feature_vectors_csr, labels)
+        clf.fit(self.feature_vectors, labels)
         print("best parameters : ", clf.best_params_)
         print("best scores : ", clf.best_score_)
