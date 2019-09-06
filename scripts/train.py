@@ -9,23 +9,19 @@ from sklearn.feature_extraction import DictVectorizer
 
 from lecture_tmu_2019.utils import set_locale, text_reader, word_counter, get_unigram, cross_validate, DATA_NUM
 
-print(os.listdir(os.path.normpath("dataset/")))
+
+def load_data():
+    print(os.listdir(os.path.normpath("dataset/")))
+    neg_files = glob.glob(os.path.normpath("dataset/tokens/neg/*"))
+    pos_files = glob.glob(os.path.normpath("dataset/tokens/pos/*"))
+    text_reader(neg_files[11])
+    word_counter("I am YK. I love data analysis using python.")
+    unigrams_data = get_unigram(neg_files[:DATA_NUM]) + get_unigram(pos_files[:DATA_NUM])
+    print("data size :", sys.getsizeof(unigrams_data) / 1000000, "[MB]")
+    return unigrams_data
 
 set_locale()
-
-neg_files = glob.glob(os.path.normpath("dataset/tokens/neg/*"))
-pos_files = glob.glob(os.path.normpath("dataset/tokens/pos/*"))
-
-print(neg_files[0:2])
-print(pos_files[0:2])
-
-text_reader(neg_files[11])
-
-word_counter("I am YK. I love data analysis using python.")
-
-unigrams_data = get_unigram(neg_files[:DATA_NUM]) + get_unigram(pos_files[:DATA_NUM])
-
-print("data size :", sys.getsizeof(unigrams_data) / 1000000, "[MB]")
+unigrams_data = load_data()
 
 vec = DictVectorizer()
 feature_vectors_csr = vec.fit_transform(unigrams_data)
