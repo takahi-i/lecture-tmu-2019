@@ -1,7 +1,7 @@
 from lecture_tmu_2019.utils import set_locale
-from lecture_tmu_2019.ml import generate_feature_vectors, fit, load_data
-
+from lecture_tmu_2019.ml import ReputationClassifier
 
 set_locale()
-feature_vectors_csr = generate_feature_vectors(load_data())
-fit(feature_vectors_csr)
+classiier = ReputationClassifier()
+feature_vectors_csr = classiier.generate_feature_vectors(classiier.load_data())
+classiier.fit(feature_vectors_csr)
