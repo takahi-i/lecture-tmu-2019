@@ -20,19 +20,22 @@ def load_data():
     print("data size :", sys.getsizeof(unigrams_data) / 1000000, "[MB]")
     return unigrams_data
 
+
+def generate_feature_vectors():
+    vec = DictVectorizer()
+    feature_vectors_csr = vec.fit_transform(unigrams_data)
+    feature_vectors = vec.fit_transform(unigrams_data).toarray()
+    print("data dimension :", feature_vectors.shape)
+    print(feature_vectors[0])
+    print("data size :", sys.getsizeof(feature_vectors) / 1000000, "[MB]")
+    return feature_vectors_csr
+
+
 set_locale()
 unigrams_data = load_data()
-
-vec = DictVectorizer()
-feature_vectors_csr = vec.fit_transform(unigrams_data)
-
-feature_vectors = vec.fit_transform(unigrams_data).toarray()
-print("data dimension :", feature_vectors.shape)
-print(feature_vectors[0])
-print("data size :", sys.getsizeof(feature_vectors) / 1000000, "[MB]")
+feature_vectors_csr = generate_feature_vectors()
 
 labels = np.r_[np.tile(0, DATA_NUM), np.tile(1, DATA_NUM)]
-
 print(labels[0], labels[DATA_NUM-1], labels[DATA_NUM], labels[2*DATA_NUM-1])
 
 np.random.seed(7789)
