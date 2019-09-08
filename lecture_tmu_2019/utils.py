@@ -6,7 +6,7 @@ import numpy as np
 from sklearn import svm, naive_bayes
 from sklearn.ensemble import RandomForestClassifier
 
-DATA_NUM = 700
+from lecture_tmu_2019.settings import DATA_NUM
 
 
 def set_locale():
