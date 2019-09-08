@@ -6,14 +6,8 @@ import numpy as np
 from sklearn import svm, grid_search
 from sklearn.feature_extraction import DictVectorizer
 
-from lecture_tmu_2019.utils import text_reader, word_counter, get_unigram, DATA_NUM
-
-SEARCH_PARAMETERS = [{'kernel': ['rbf'], 'gamma': [1e-2, 1e-3, 1e-4], 'C': [0.1, 1, 10, 100, 1000]},
-        {'kernel': ['linear'], 'C': [0.1, 1, 10, 100, 1000]}]
-
-DATASET_BASE_PATH = "dataset"
-POSITIVE_FILES = "{}/tokens/pos/*".format(DATASET_BASE_PATH)
-NEGATIVE_FILES = "{}/tokens/neg/*".format(DATASET_BASE_PATH)
+from lecture_tmu_2019.settings import SEARCH_PARAMETERS, DATASET_BASE_PATH, POSITIVE_FILES, NEGATIVE_FILES, DATA_NUM
+from lecture_tmu_2019.utils import text_reader, word_counter, get_unigram
 
 
 class ReputationClassifier:
