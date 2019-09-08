@@ -1,4 +1,4 @@
-.PHONY: clean clean-model clean-pyc docs help init init-docker create-container start-container jupyter test lint profile clean clean-data clean-docker clean-container clean-image sync-from-source sync-to-source
+.PHONY: clean clean-model clean-pyc docs help init init-docker create-container start-container jupyter test lint profile clean clean-data clean-docker clean-container clean-image
 .DEFAULT_GOAL := help
 
 ###########################################################################################################
@@ -71,19 +71,13 @@ export DOCKERFILE=docker/Dockerfile
 help: ## show this message
 	@$(PYTHON) -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-init: init-docker sync-from-source ## initialize repository for traning
-
-sync-from-source: ## download data data source to local envrionment
-	cp -r $(DATA_SOURCE)/* ./data/
+init: init-docker ## initialize repository for traning
 
 init-docker: ## initialize docker image
 	$(DOCKER) build -t $(IMAGE_NAME) -f $(DOCKERFILE) --build-arg UID=$(shell id -u) .
 
 init-docker-no-cache: ## initialize docker image without cachhe
 	$(DOCKER) build --no-cache -t $(IMAGE_NAME) -f $(DOCKERFILE) --build-arg UID=$(shell id -u) .
-
-sync-to-source: ## sync local data to data source
-	cp -r ./data/* $(DATA_SOURCE)/
 
 create-container: ## create docker container
 	$(DOCKER) run -it -v $(PWD):/work -p $(JUPYTER_HOST_PORT):$(JUPYTER_CONTAINER_PORT) --name $(CONTAINER_NAME) $(IMAGE_NAME)
