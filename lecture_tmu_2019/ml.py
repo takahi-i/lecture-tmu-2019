@@ -11,9 +11,9 @@ from lecture_tmu_2019.utils import text_reader, word_counter, get_unigram, DATA_
 
 class ReputationClassifier:
     def __init__(self):
-        self.feature_vectors = self.generate_feature_vectors(self.load_data())
+        self.feature_vectors = self._generate_feature_vectors(self._load_data())
 
-    def load_data(self):
+    def _load_data(self):
         print(os.listdir(os.path.normpath("dataset/")))
         neg_files = glob.glob(os.path.normpath("dataset/tokens/neg/*"))
         pos_files = glob.glob(os.path.normpath("dataset/tokens/pos/*"))
@@ -23,7 +23,7 @@ class ReputationClassifier:
         print("data size :", sys.getsizeof(unigrams) / 1000000, "[MB]")
         return unigrams
 
-    def generate_feature_vectors(self, unigrams):
+    def _generate_feature_vectors(self, unigrams):
         vec = DictVectorizer()
         return vec.fit_transform(unigrams)
 
