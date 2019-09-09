@@ -32,9 +32,9 @@ class ReputationClassifier:
         clf = grid_search.GridSearchCV(svm.SVC(), search_parameters)
         clf.fit(self.feature_vectors, labels)
         self.model = clf.best_estimator_
-
         print("best parameters : ", clf.best_params_)
         print("best scores : ", clf.best_score_)
+        return clf.best_score_
 
     def predict(self, text):
         vector = self.vec.transform(text)
