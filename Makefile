@@ -66,6 +66,10 @@ export DOCKERFILE=docker/Dockerfile
 train: ## train model
 	PYTHONPATH=. python3 scripts/train.py
 
+inference: ## train model
+	PYTHONPATH=. python3 scripts/predict.py
+
+
 ###########################################################################################################
 ## GENERAL TARGETS
 ###########################################################################################################
