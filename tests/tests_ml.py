@@ -1,9 +1,10 @@
 import unittest
 
+from lecture_tmu_2019.ml import ReputationClassifier
+
 
 class TestSample(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    def test_add(self):
-        self.assertEqual((3 + 4), 7)
+    def test_fit(self):
+        classiier = ReputationClassifier()
+        best_score = classiier.fit()
+        self.assertGreaterEqual(best_score, 0.7)
