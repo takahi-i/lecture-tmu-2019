@@ -21,6 +21,13 @@ The above command creates a Docker container from the Docker image which we crea
 login to the Docker container. Now we made the development environment. For create and evaluate the model,
 you run the following command.
 
+## Run classifier
+
+In Docker container, we can run the following command to generate model. 
+
+- `make train` create a model.
+- `make inference` also create a model and classify a sample data
+
 ## Development with Docker container
 
 This section shows how we develop with the created Docker container.
