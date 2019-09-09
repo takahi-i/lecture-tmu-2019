@@ -63,6 +63,8 @@ export DOCKERFILE=docker/Dockerfile
 ## ADD TARGETS SPECIFIC TO "lecture-tmu-2019"
 ###########################################################################################################
 
+train: ## train model
+	PYTHONPATH=. python3 scripts/train.py
 
 ###########################################################################################################
 ## GENERAL TARGETS
