@@ -18,16 +18,9 @@ def set_locale():
 
 
 def text_reader(file_path):
-    python_version = sys.version_info.major
-
-    if python_version >= 3:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            for line in f:
-                print(line)
-    else:
-        with open(file_path, 'r') as f:
-            for line in f:
-                print(line)
+    with open(file_path, 'r', encoding='utf-8') as f:
+        for line in f:
+            print(line)
 
 
 def word_counter(string):
@@ -38,21 +31,11 @@ def word_counter(string):
 
 def get_unigram(file_path):
     result = []
-    python_version = sys.version_info.major
-
-    if python_version >= 3:
-        for file in file_path:
-            with open(file, 'r', encoding='utf-8') as f:
-                for line in f:
-                    count_dict = word_counter(line)
-                    result.append(count_dict)
-    else:
-        for file in file_path:
-            with open(file, 'r') as f:
-                for line in f:
-                    count_dict = word_counter(line)
-                    result.append(count_dict)
-
+    for file in file_path:
+        with open(file, 'r', encoding='utf-8') as f:
+            for line in f:
+                count_dict = word_counter(line)
+                result.append(count_dict)
     return result
 
 
