@@ -12,7 +12,10 @@ from lecture_tmu_2019.utils import text_reader, word_counter, get_unigram
 
 class ReputationClassifier:
     def __init__(self):
-        self.feature_vectors = self._generate_feature_vectors(self._load_data())
+        self.vec = DictVectorizer()
+        self.feature_vectors = self.vec.fit_transform(self._load_data())
+        self.clf = None
+        self.model = None
 
     def _load_data(self):
         print(os.listdir(os.path.normpath(DATASET_BASE_PATH)))
@@ -24,14 +27,15 @@ class ReputationClassifier:
         print("data size :", sys.getsizeof(unigrams) / 1000000, "[MB]")
         return unigrams
 
-    def _generate_feature_vectors(self, unigrams):
-        vec = DictVectorizer()
-        return vec.fit_transform(unigrams)
-
     def fit(self, search_parameters=SEARCH_PARAMETERS):
         labels = np.r_[np.tile(0, DATA_NUM), np.tile(1, DATA_NUM)]
-        model = svm.SVC()
-        clf = grid_search.GridSearchCV(model, search_parameters)
+        clf = grid_search.GridSearchCV(svm.SVC(), search_parameters)
         clf.fit(self.feature_vectors, labels)
+        self.model = clf.best_estimator_
+
         print("best parameters : ", clf.best_params_)
         print("best scores : ", clf.best_score_)
+
+    def predict(self, text):
+        vector = self.vec.transform(text)
+        return self.model.predict(vector)
