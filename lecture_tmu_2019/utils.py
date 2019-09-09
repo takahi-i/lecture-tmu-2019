@@ -56,6 +56,14 @@ def get_unigram(file_path):
     return result
 
 
+def get_unigram_from_text(text):
+    result = []
+    for line in text:
+        count_dict = word_counter(line)
+        result.append(count_dict)
+    return result
+
+
 def N_splitter(seq, N):
     avg = len(seq) / float(N)
     out = []
