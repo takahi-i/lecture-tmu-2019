@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/takahi-i/lecture-tmu-2019.svg?branch=master)](https://travis-ci.org/takahi-i/lecture-tmu-2019)
+
 # lecture-tmu-2019
 
 A sample project used in a lecture in TMU.
