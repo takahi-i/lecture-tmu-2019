@@ -22,7 +22,7 @@ Dockerイメージを構築後、以下のコマンドを実行して開発環�
 
 ## 分類機を動す
 
-前節で生成したDockerコンテナ上で以下のコマンドを実行すうるとモデルがせいせされます。
+前節で生成したDockerコンテナ上で以下のコマンドを実行すうるとモデルが生成されます。
 
 - `make train` モデルを生成
 - `make inference` モデルを生成し、サンプルデータを利用して推論を実行する
@@ -34,7 +34,7 @@ Dockerコンテナ上で`make test`を実行する。
 ## Jupyter Notebookを実行
 
 Dockerコンテナ上で`make jupyter`を実行すると、Dockerコンテナ上にJupyter Notebookサーバが立ち上がる。
-立ち上がったJupyter Notebookサーバにはホスト環境でWebブラウザを使って　http://localhost:8888 を開くことでアクセスできる。 
+立ち上がったJupyter Notebookサーバにはホスト環境でWebブラウザを使って http://localhost:8888 を開くことでアクセスできる。
 
 ## Credits
 
