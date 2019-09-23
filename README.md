@@ -6,7 +6,7 @@
 
 ## 準備
 
-- [Docker version 17 or later](https://docs.docker.com/install/#support)
+- [Docker v17 以降](https://docs.docker.com/install/#support)
 
 ## 開発環境のセットアップ
 
