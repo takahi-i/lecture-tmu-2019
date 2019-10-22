@@ -58,6 +58,7 @@ export JUPYTER_HOST_PORT=8888
 export JUPYTER_CONTAINER_PORT=8888
 export PYTHON=python3
 export DOCKERFILE=docker/Dockerfile
+export HIDEOUT_BASEDIR=./cache
 
 ###########################################################################################################
 ## ADD TARGETS SPECIFIC TO "lecture-tmu-2019"
