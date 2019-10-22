@@ -3,6 +3,7 @@ import os
 import sys
 
 import numpy as np
+import hideout
 from sklearn import svm, grid_search
 from sklearn.feature_extraction import DictVectorizer
 
@@ -12,10 +13,17 @@ from lecture_tmu_2019.utils import text_reader, word_counter, get_unigram
 
 class ReputationClassifier:
     def __init__(self):
-        self.vec = DictVectorizer()
-        self.feature_vectors = self.vec.fit_transform(self._load_data())
+        self.vec, self.feature_vectors = hideout.resume_or_generate(
+            label="vectorizer",
+            func=self._vectorizer
+        )
         self.clf = None
         self.model = None
+
+    def _vectorizer(self):
+        vec = DictVectorizer()
+        feature_vector = vec.fit_transform(self._load_data())
+        return [vec, feature_vector]
 
     def _load_data(self):
         print(os.listdir(os.path.normpath(DATASET_BASE_PATH)))
@@ -28,13 +36,20 @@ class ReputationClassifier:
         return unigrams
 
     def fit(self, search_parameters=SEARCH_PARAMETERS):
-        labels = np.r_[np.tile(0, DATA_NUM), np.tile(1, DATA_NUM)]
-        clf = grid_search.GridSearchCV(svm.SVC(), search_parameters)
-        clf.fit(self.feature_vectors, labels)
-        self.model = clf.best_estimator_
+        clf, self.model = hideout.resume_or_generate(
+            label="classifier",
+            func=self._fit,
+            func_args={"search_parameters": search_parameters}
+        )
         print("best parameters : ", clf.best_params_)
         print("best scores : ", clf.best_score_)
         return clf.best_score_
+
+    def _fit(self, search_parameters):
+        labels = np.r_[np.tile(0, DATA_NUM), np.tile(1, DATA_NUM)]
+        clf = grid_search.GridSearchCV(svm.SVC(), search_parameters)
+        clf.fit(self.feature_vectors, labels)
+        return [clf, clf.best_estimator_]
 
     def predict(self, text):
         vector = self.vec.transform(text)
