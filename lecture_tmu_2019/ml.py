@@ -3,6 +3,7 @@ import os
 import sys
 
 import numpy as np
+import hideout
 from sklearn import svm, grid_search
 from sklearn.feature_extraction import DictVectorizer
 
@@ -12,10 +13,17 @@ from lecture_tmu_2019.utils import text_reader, word_counter, get_unigram
 
 class ReputationClassifier:
     def __init__(self):
-        self.vec = DictVectorizer()
-        self.feature_vectors = self.vec.fit_transform(self._load_data())
+        self.vec, self.feature_vectors = hideout.resume_or_generate(
+            label="vectorizer",
+            func=self._vectorizer
+        )
         self.clf = None
         self.model = None
+
+    def _vectorizer(self):
+        vec = DictVectorizer()
+        feature_vector = vec.fit_transform(self._load_data())
+        return [vec, feature_vector]
 
     def _load_data(self):
         print(os.listdir(os.path.normpath(DATASET_BASE_PATH)))
