@@ -1,4 +1,4 @@
-.PHONY: clean clean-model clean-pyc docs help init init-docker create-container start-container jupyter test lint profile clean clean-data clean-docker clean-container clean-image
+.PHONY: clean clean-model clean-pyc docs help init init-docker create-container start-container jupyter test lint profile clean clean-data clean-docker clean-container clean-image test-in-local
 .DEFAULT_GOAL := help
 
 ###########################################################################################################
@@ -44,6 +44,7 @@ endef
 ###########################################################################################################
 ## VARIABLES
 ###########################################################################################################
+
 export DOCKER=docker
 export TARGET=
 export PWD=`pwd`
@@ -52,9 +53,12 @@ export START_DOCKER_CONTAINER
 export PYTHONPATH=$PYTHONPATH:$(PWD)
 export PROJECT_NAME=lecture-tmu-2019
 export IMAGE_NAME=$(PROJECT_NAME)-image
+export BASE_IMAGE_NAME=$(PROJECT_NAME)-base-image
+export RELEASE_IMAGE_NAME=$(PROJECT_NAME)-release-image
+export DEV_IMAGE_NAME=$(PROJECT_NAME)-dev-image
 export CONTAINER_NAME=$(PROJECT_NAME)-container
 export DATA_SOURCE=Please Input data source
-export JUPYTER_HOST_PORT=8888
+export JUPYTER_HOST_PORT=8989
 export JUPYTER_CONTAINER_PORT=8888
 export PYTHON=python3
 export DOCKERFILE=docker/Dockerfile
@@ -70,7 +74,6 @@ train: ## train model
 inference: ## train model
 	PYTHONPATH=. $(PYTHON) scripts/predict.py
 
-
 ###########################################################################################################
 ## GENERAL TARGETS
 ###########################################################################################################
@@ -81,13 +84,14 @@ help: ## show this message
 init: init-docker ## initialize repository for traning
 
 init-docker: ## initialize docker image
-	$(DOCKER) build -t $(IMAGE_NAME) -f $(DOCKERFILE) --build-arg UID=$(shell id -u) .
+	$(DOCKER) build --target base -t $(BASE_IMAGE_NAME) -f $(DOCKERFILE) --build-arg UID=$(shell id -u) .
+	$(DOCKER) build --target release -t $(RELEASE_IMAGE_NAME) -f $(DOCKERFILE) --build-arg UID=$(shell id -u) .
 
 init-docker-no-cache: ## initialize docker image without cachhe
 	$(DOCKER) build --no-cache -t $(IMAGE_NAME) -f $(DOCKERFILE) --build-arg UID=$(shell id -u) .
 
-create-container: ## create docker container
-	$(DOCKER) run -it -v $(PWD):/work -p $(JUPYTER_HOST_PORT):$(JUPYTER_CONTAINER_PORT) --name $(CONTAINER_NAME) $(IMAGE_NAME)
+create-container: ## create docker container for development
+	$(DOCKER) run -it -v $(PWD):/work -p $(JUPYTER_HOST_PORT):$(JUPYTER_CONTAINER_PORT) --name $(CONTAINER_NAME) $(DEV_IMAGE_NAME)
 
 start-container: ## start docker container
 	@echo "$$START_DOCKER_CONTAINER" | $(SHELL)
@@ -97,8 +101,12 @@ start-container: ## start docker container
 jupyter: ## start Jupyter Notebook server
 	jupyter-notebook --ip=0.0.0.0 --port=${JUPYTER_CONTAINER_PORT}
 
-test: ## run test cases in tests directory
+test-in-local: ## run test cases in tests directory
 	$(PYTHON) -m unittest discover
+
+test: ## run test cases in tests directory (NOTE: runnable only in host machine)
+	$(DOCKER) build --target dev -t $(DEV_IMAGE_NAME) -f $(DOCKERFILE) --build-arg UID=$(shell id -u) .
+	$(DOCKER) run --rm -v $(PWD):/work $(DEV_IMAGE_NAME) make test-in-local
 
 lint: ## check style with flake8
 	flake8 document_labling
@@ -131,4 +139,6 @@ clean-container: ## remove Docker container
 	-$(DOCKER) rm $(CONTAINER_NAME)
 
 clean-image: ## remove Docker image
-	-$(DOCKER) image rm $(IMAGE_NAME)
+	-$(DOCKER) image rm $(DEV_IMAGE_NAME)
+	-$(DOCKER) image rm $(BASE_IMAGE_NAME)
+	-$(DOCKER) image rm $(RELEASE_IMAGE_NAME)
