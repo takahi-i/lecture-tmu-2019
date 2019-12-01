@@ -36,6 +36,12 @@ Dockerコンテナ上で`make test`を実行する。
 Dockerコンテナ上で`make jupyter`を実行すると、Dockerコンテナ上にJupyter Notebookサーバが立ち上がる。
 立ち上がったJupyter Notebookサーバにはホスト環境でWebブラウザを使って http://localhost:8888 を開くことでアクセスできる。
 
+## 修正
+
+- [CIの設定（Travis）](https://github.com/takahi-i/lecture-tmu-2019/pull/31)
+- [Makefileをつけてフローを制御する](https://github.com/takahi-i/lecture-tmu-2019/pull/19)
+- [関数の抽出](https://github.com/takahi-i/lecture-tmu-2019/pull/15)
+
 ## Credits
 
 本レポジトリはの Jupyter Notebookは [フリーライブラリで学ぶ機械学習入門 サンプルコード](https://github.com/yosukekatada/mlbook) のものです。
