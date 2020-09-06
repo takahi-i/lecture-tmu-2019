@@ -44,5 +44,5 @@ Dockerコンテナ上で`make jupyter`を実行すると、Dockerコンテナ上
 
 ## Credits
 
-本レポジトリはの Jupyter Notebookは [フリーライブラリで学ぶ機械学習入門 サンプルコード](https://github.com/yosukekatada/mlbook) のものです。
+本レポジトリに含まれている Jupyter Notebookは [フリーライブラリで学ぶ機械学習入門 サンプルコード](https://github.com/yosukekatada/mlbook) のものです。
 著者の一人である菊田氏に使用を相談したところ、快諾をいただきました。
