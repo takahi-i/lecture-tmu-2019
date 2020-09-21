@@ -1,11 +1,11 @@
 import glob
 import os
 import sys
-
 import numpy as np
 import hideout
 from sklearn import svm, grid_search
 from sklearn.feature_extraction import DictVectorizer
+from typing import Dict, List
 
 from lecture_tmu_2019.settings import SEARCH_PARAMETERS, DATASET_BASE_PATH, POSITIVE_FILES, NEGATIVE_FILES, DATA_NUM
 from lecture_tmu_2019.utils import text_reader, word_counter, get_unigram
@@ -35,7 +35,7 @@ class ReputationClassifier:
         print("data size :", sys.getsizeof(unigrams) / 1000000, "[MB]")
         return unigrams
 
-    def fit(self, search_parameters=SEARCH_PARAMETERS):
+    def fit(self, search_parameters: List = SEARCH_PARAMETERS) -> float:
         clf, self.model = hideout.resume_or_generate(
             label="classifier",
             func=self._fit,
@@ -45,12 +45,12 @@ class ReputationClassifier:
         print("best scores : ", clf.best_score_)
         return clf.best_score_
 
-    def _fit(self, search_parameters):
+    def _fit(self, search_parameters: Dict) -> List:
         labels = np.r_[np.tile(0, DATA_NUM), np.tile(1, DATA_NUM)]
         clf = grid_search.GridSearchCV(svm.SVC(), search_parameters)
         clf.fit(self.feature_vectors, labels)
         return [clf, clf.best_estimator_]
 
-    def predict(self, text):
+    def predict(self, text: Dict) -> np.ndarray:
         vector = self.vec.transform(text)
         return self.model.predict(vector)
