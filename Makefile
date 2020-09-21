@@ -1,4 +1,4 @@
-.PHONY: clean clean-model clean-pyc docs help init init-docker create-container start-container jupyter test lint profile clean clean-data clean-docker clean-container clean-image
+.PHONY: clean clean-model clean-pyc docs help init init-docker create-container start-container jupyter test lint profile clean clean-data clean-docker clean-container clean-image type-check
 .DEFAULT_GOAL := help
 
 ###########################################################################################################
@@ -70,7 +70,6 @@ train: ## train model
 inference: ## train model
 	PYTHONPATH=. $(PYTHON) scripts/predict.py
 
-
 ###########################################################################################################
 ## GENERAL TARGETS
 ###########################################################################################################
@@ -102,6 +101,9 @@ test: ## run test cases in tests directory
 
 lint: ## check style with flake8
 	flake8 document_labling
+
+type-check: ## type check with mypy
+	mypy lecture_tmu_2019
 
 profile: ## show profile of the project
 	@echo "CONTAINER_NAME: $(CONTAINER_NAME)"
