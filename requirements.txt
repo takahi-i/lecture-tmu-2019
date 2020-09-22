@@ -7,3 +7,4 @@ sklearn
 numpy==1.14.2
 scipy==0.19.1
 hideout==0.3.2
+mypy==0.782
