@@ -26,10 +26,16 @@ def word_counter(string: str) -> Dict:
 def get_unigram(file_path: str) -> List:
     result = []
     for file in file_path:
-        with open(file, 'r', encoding='utf-8') as f:
-            for line in f:
-                count_dict = word_counter(line)
-                result.append(count_dict)
+        result.extend(_get_unigram_from_a_file(file))
+    return result
+
+
+def _get_unigram_from_a_file(file):
+    result = []
+    with open(file, 'r', encoding='utf-8') as f:
+        for line in f:
+            count_dict = word_counter(line)
+            result.append(count_dict)
     return result
 
 
