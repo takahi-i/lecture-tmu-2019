@@ -7,4 +7,4 @@ class TestSample(unittest.TestCase):
     def test_fit(self):
         classiier = ReputationClassifier()
         best_score = classiier.fit()
-        self.assertGreaterEqual(best_score, 0.7)
+        self.assertGreaterEqual(0.7, best_score)  # NOTE: FAIL!
